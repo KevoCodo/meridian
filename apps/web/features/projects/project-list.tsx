@@ -1,5 +1,7 @@
+import { BriefcaseBusiness } from "lucide-react";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   ProjectPriorityBadge,
   ProjectStatusBadge,
@@ -18,14 +20,18 @@ export function ProjectList({
 
   if (projects.length === 0) {
     return (
-      <div className="rounded-md border border-border bg-white p-6 text-sm text-muted-foreground">
-        No projects match the current view.
-      </div>
+      <EmptyState
+        actionHref="/projects/new"
+        actionLabel="Create project"
+        description="Create a project or adjust the current filters to see client work."
+        icon={BriefcaseBusiness}
+        title="No projects match this view"
+      />
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-md border border-border bg-white shadow-sm">
       <table className="w-full border-collapse text-left text-sm">
         <thead className="bg-muted text-muted-foreground">
           <tr>

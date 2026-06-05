@@ -1,5 +1,7 @@
+import { FileText } from "lucide-react";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import type { Client } from "@/types/client";
 import type { Note } from "@/types/note";
 import type { Project } from "@/types/project";
@@ -18,9 +20,13 @@ export function NoteList({
 }) {
   if (notes.length === 0) {
     return (
-      <div className="rounded-md border border-border bg-white p-6 text-sm text-muted-foreground">
-        No notes yet.
-      </div>
+      <EmptyState
+        actionHref="/notes/new"
+        actionLabel="Create note"
+        description="Capture the first piece of workspace, client, project, or task context."
+        icon={FileText}
+        title="No notes yet"
+      />
     );
   }
 

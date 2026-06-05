@@ -1,19 +1,25 @@
+import { Building2 } from "lucide-react";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import { StatusBadge } from "@/features/clients/status-badge";
 import type { Client } from "@/types/client";
 
 export function ClientList({ clients }: { clients: Client[] }) {
   if (clients.length === 0) {
     return (
-      <div className="rounded-md border border-border bg-white p-6 text-sm text-muted-foreground">
-        No clients yet.
-      </div>
+      <EmptyState
+        actionHref="/clients/new"
+        actionLabel="Create client"
+        description="Add the first client to begin organizing projects, tasks, and business context."
+        icon={Building2}
+        title="No clients yet"
+      />
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-md border border-border bg-white shadow-sm">
       <table className="w-full border-collapse text-left text-sm">
         <thead className="bg-muted text-muted-foreground">
           <tr>

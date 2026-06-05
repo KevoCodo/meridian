@@ -1,5 +1,7 @@
+import { Workflow } from "lucide-react";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import {
   actionLabel,
   ActiveBadge,
@@ -10,14 +12,18 @@ import type { AutomationRule } from "@/types/automation-rule";
 export function AutomationRuleList({ rules }: { rules: AutomationRule[] }) {
   if (rules.length === 0) {
     return (
-      <div className="rounded-md border border-border bg-white p-6 text-sm text-muted-foreground">
-        No automation rules have been defined yet.
-      </div>
+      <EmptyState
+        actionHref="/automations/new"
+        actionLabel="Create rule"
+        description="Define a simple rule to create follow-up work after a task is completed."
+        icon={Workflow}
+        title="No automation rules yet"
+      />
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-md border border-border bg-white shadow-sm">
       <table className="w-full border-collapse text-left text-sm">
         <thead className="bg-muted text-muted-foreground">
           <tr>
