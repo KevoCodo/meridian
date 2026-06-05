@@ -24,6 +24,9 @@ services:
       PROJECT_NAME: Meridian API
       VERSION: 0.1.0
       ENVIRONMENT: development
+      AUTH_SECRET_KEY: local-development-secret-change-before-production
+      AUTH_COOKIE_NAME: meridian_session
+      AUTH_TOKEN_EXPIRE_MINUTES: 10080
       POSTGRES_SERVER: postgres
       POSTGRES_PORT: 5432
       POSTGRES_USER: meridian

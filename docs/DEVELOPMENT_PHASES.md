@@ -201,6 +201,25 @@ Deliverables:
 Phase 5B improves existing product surfaces only. It excludes new product
 modules, authentication, billing, external integrations, and AI features.
 
+## Phase 6A: Authentication Foundation
+
+Status: complete
+
+Deliverables:
+
+- User schema and migration
+- Argon2 password hashing
+- HTTP-only cookie JWT authentication
+- Registration, login, logout, and current-user API endpoints
+- Protected business API routers
+- Login and registration pages
+- Protected frontend routes
+- Current-user display and logout action
+
+Phase 6A authenticates users but does not yet authorize access by workspace.
+OAuth, password reset, email verification, advanced RBAC, and workspace
+membership are deferred.
+
 ## Phase 0C: Tooling and Quality Baseline
 
 Potential deliverables:

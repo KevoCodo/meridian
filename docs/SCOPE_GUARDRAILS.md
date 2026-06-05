@@ -32,3 +32,9 @@ The following should not be implemented during Phase 0A:
 - Production deployment automation
 
 These may be added in later phases after the foundation is stable.
+
+## Authentication Foundation Limits
+
+Phase 6A includes local email and password authentication only. It explicitly
+excludes OAuth, password reset, email verification, advanced RBAC, invitations,
+workspace membership, and workspace-level authorization.

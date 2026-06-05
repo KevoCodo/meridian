@@ -1,3 +1,5 @@
+import { cookies } from "next/headers";
+
 export function getBackendBaseUrl() {
   return (
     process.env.API_BASE_URL ??
@@ -10,11 +12,13 @@ export async function backendFetch<T>(
   path: string,
   init?: RequestInit,
 ): Promise<T> {
+  const cookieHeader = (await cookies()).toString();
   const response = await fetch(`${getBackendBaseUrl()}${path}`, {
     cache: "no-store",
     ...init,
     headers: {
       "Content-Type": "application/json",
+      Cookie: cookieHeader,
       ...init?.headers,
     },
   });
