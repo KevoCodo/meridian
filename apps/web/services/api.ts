@@ -14,6 +14,7 @@ import type { Note, NoteFilters, NotePayload } from "@/types/note";
 import type { Project, ProjectFilters, ProjectPayload } from "@/types/project";
 import type { Task, TaskFilters, TaskPayload } from "@/types/task";
 import type { Workspace } from "@/types/workspace";
+import type { WorkspaceMember } from "@/types/workspace-membership";
 
 import { backendFetch } from "@/services/backend";
 
@@ -91,6 +92,10 @@ export async function getWorkspaces(): Promise<Workspace[]> {
 
 export async function getWorkspace(id: string): Promise<Workspace> {
   return backendFetch<Workspace>(`/workspaces/${id}`);
+}
+
+export async function getCurrentWorkspaceMembers(): Promise<WorkspaceMember[]> {
+  return backendFetch<WorkspaceMember[]>("/workspaces/current/members");
 }
 
 export async function getClients(): Promise<Client[]> {

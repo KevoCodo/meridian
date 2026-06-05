@@ -1,3 +1,5 @@
+import type { User } from "@/types/user";
+
 export type TaskStatus =
   | "todo"
   | "in_progress"
@@ -16,7 +18,8 @@ export type Task = {
   status: TaskStatus;
   priority: TaskPriority;
   dueDate: string | null;
-  assignedTo: string | null;
+  assignedUserId: string | null;
+  assignedUser: User | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -29,7 +32,7 @@ export type TaskPayload = {
   status: TaskStatus;
   priority: TaskPriority;
   dueDate?: string | null;
-  assignedTo?: string | null;
+  assignedUserId?: string | null;
 };
 
 export type TaskFilters = {

@@ -72,7 +72,7 @@ export function TaskList({
                   {task.dueDate ? formatDate(task.dueDate) : "Not set"}
                 </td>
                 <td className="px-4 py-3 text-muted-foreground">
-                  {task.assignedTo || "Unassigned"}
+                  {task.assignedUser?.name || "Unassigned"}
                 </td>
               </tr>
             );

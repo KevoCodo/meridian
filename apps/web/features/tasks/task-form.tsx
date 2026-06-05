@@ -16,6 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { Project } from "@/types/project";
 import type { Task } from "@/types/task";
 import type { Workspace } from "@/types/workspace";
+import type { WorkspaceMember } from "@/types/workspace-membership";
 
 const optionalDate = z.union([
   z.literal(""),
@@ -30,17 +31,19 @@ const taskFormSchema = z.object({
   status: z.enum(["todo", "in_progress", "blocked", "completed", "archived"]),
   priority: z.enum(["low", "medium", "high", "urgent"]),
   dueDate: optionalDate,
-  assignedTo: z.string().trim().max(255).optional(),
+  assignedUserId: z.union([z.literal(""), z.string().uuid()]),
 });
 
 type TaskFormValues = z.infer<typeof taskFormSchema>;
 
 export function TaskForm({
   projects,
+  members,
   task,
   workspaces,
 }: {
   projects: Project[];
+  members: WorkspaceMember[];
   task?: Task;
   workspaces: Workspace[];
 }) {
@@ -60,7 +63,7 @@ export function TaskForm({
       status: task?.status ?? "todo",
       priority: task?.priority ?? "medium",
       dueDate: task?.dueDate ?? "",
-      assignedTo: task?.assignedTo ?? "",
+      assignedUserId: task?.assignedUserId ?? "",
     },
   });
 
@@ -73,7 +76,7 @@ export function TaskForm({
         ...values,
         description: normalizeOptional(values.description),
         dueDate: normalizeOptional(values.dueDate),
-        assignedTo: normalizeOptional(values.assignedTo),
+        assignedUserId: normalizeOptional(values.assignedUserId),
       }),
     });
 
@@ -132,8 +135,15 @@ export function TaskForm({
           <Input {...register("title")} placeholder="Prepare client kickoff agenda" />
         </Field>
 
-        <Field label="Assigned to" error={errors.assignedTo?.message}>
-          <Input {...register("assignedTo")} placeholder="Team member name" />
+        <Field label="Assigned to" error={errors.assignedUserId?.message}>
+          <Select {...register("assignedUserId")}>
+            <option value="">Unassigned</option>
+            {members.map((membership) => (
+              <option key={membership.id} value={membership.userId}>
+                {membership.user.name}
+              </option>
+            ))}
+          </Select>
         </Field>
 
         <Field label="Status" error={errors.status?.message}>

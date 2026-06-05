@@ -85,7 +85,7 @@ export default async function TaskDetailPage({
               value={
                 <span className="inline-flex items-center gap-2">
                   <UserRound className="h-4 w-4 text-primary" aria-hidden="true" />
-                  {task.assignedTo || "Unassigned"}
+                  {task.assignedUser?.name || "Unassigned"}
                 </span>
               }
             />

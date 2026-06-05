@@ -2,12 +2,13 @@ import { Building2, Users } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
 import { PageHeader } from "@/components/page-header";
-import { getClients, getWorkspaces } from "@/services/api";
+import { getClients, getCurrentWorkspaceMembers, getWorkspaces } from "@/services/api";
 
 export default async function WorkspacesPage() {
-  const [workspaces, clients] = await Promise.all([
+  const [workspaces, clients, members] = await Promise.all([
     getWorkspaces(),
     getClients(),
+    getCurrentWorkspaceMembers(),
   ]);
 
   return (
@@ -39,12 +40,35 @@ export default async function WorkspacesPage() {
               </div>
               <div className="flex items-center gap-2">
                 <Users className="h-4 w-4 text-primary" aria-hidden="true" />
-                <span>{clients.length} clients in this foundation workspace</span>
+                <span>{clients.length} clients in this workspace</span>
               </div>
             </dl>
           </section>
         ))}
       </div>
+
+      <section className="mt-5 rounded-md border border-border bg-white p-5 shadow-sm">
+        <div className="mb-4 flex items-center gap-2">
+          <Users className="h-5 w-5 text-primary" aria-hidden="true" />
+          <h2 className="text-lg font-semibold">Workspace members</h2>
+        </div>
+        <div className="divide-y divide-border">
+          {members.map((membership) => (
+            <div
+              className="flex items-center justify-between gap-4 py-3 first:pt-0 last:pb-0"
+              key={membership.id}
+            >
+              <div>
+                <p className="text-sm font-medium">{membership.user.name}</p>
+                <p className="text-xs text-muted-foreground">{membership.user.email}</p>
+              </div>
+              <span className="rounded-md bg-muted px-2 py-1 text-xs font-medium capitalize">
+                {membership.role}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
     </AppShell>
   );
 }

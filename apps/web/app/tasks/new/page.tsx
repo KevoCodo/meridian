@@ -1,9 +1,13 @@
 import { AppShell } from "@/components/app-shell";
 import { TaskForm } from "@/features/tasks/task-form";
-import { getProjects, getWorkspaces } from "@/services/api";
+import { getCurrentWorkspaceMembers, getProjects, getWorkspaces } from "@/services/api";
 
 export default async function NewTaskPage() {
-  const [projects, workspaces] = await Promise.all([getProjects(), getWorkspaces()]);
+  const [members, projects, workspaces] = await Promise.all([
+    getCurrentWorkspaceMembers(),
+    getProjects(),
+    getWorkspaces(),
+  ]);
 
   return (
     <AppShell>
@@ -13,7 +17,7 @@ export default async function NewTaskPage() {
         </p>
         <h1 className="mt-2 text-3xl font-bold">Create task</h1>
       </div>
-      <TaskForm projects={projects} workspaces={workspaces} />
+      <TaskForm members={members} projects={projects} workspaces={workspaces} />
     </AppShell>
   );
 }

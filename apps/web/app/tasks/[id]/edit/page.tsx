@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 
 import { AppShell } from "@/components/app-shell";
 import { TaskForm } from "@/features/tasks/task-form";
-import { getProjects, getTask, getWorkspaces } from "@/services/api";
+import { getCurrentWorkspaceMembers, getProjects, getTask, getWorkspaces } from "@/services/api";
 
 export default async function EditTaskPage({
   params,
@@ -10,8 +10,9 @@ export default async function EditTaskPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [task, projects, workspaces] = await Promise.all([
+  const [task, members, projects, workspaces] = await Promise.all([
     getTask(id).catch(() => null),
+    getCurrentWorkspaceMembers(),
     getProjects(),
     getWorkspaces(),
   ]);
@@ -28,7 +29,7 @@ export default async function EditTaskPage({
         </p>
         <h1 className="mt-2 text-3xl font-bold">{task.title}</h1>
       </div>
-      <TaskForm projects={projects} task={task} workspaces={workspaces} />
+      <TaskForm members={members} projects={projects} task={task} workspaces={workspaces} />
     </AppShell>
   );
 }
