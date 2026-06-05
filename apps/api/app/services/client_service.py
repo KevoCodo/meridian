@@ -6,12 +6,15 @@ from app.core.errors import ResourceNotFoundError
 from app.models.client import Client
 from app.repositories.client_repository import ClientRepository
 from app.repositories.workspace_repository import WorkspaceRepository
+from app.schemas.activity import ActivityAction, ActivityEntityType
 from app.schemas.client import ClientCreate, ClientUpdate
+from app.services.activity_service import ActivityService
 
 
 class ClientService:
     def __init__(self, db: Session) -> None:
         self.db = db
+        self.activities = ActivityService(db)
         self.clients = ClientRepository(db)
         self.workspaces = WorkspaceRepository(db)
 
@@ -30,6 +33,13 @@ class ClientService:
             raise ResourceNotFoundError("workspace", payload.workspace_id)
 
         client = self.clients.create(self._to_persistence_data(payload))
+        self.activities.record(
+            workspace_id=client.workspace_id,
+            entity_type=ActivityEntityType.CLIENT,
+            entity_id=client.id,
+            action=ActivityAction.CREATED,
+            message=f"Client created: {client.name}",
+        )
         self.db.commit()
         self.db.refresh(client)
         return client

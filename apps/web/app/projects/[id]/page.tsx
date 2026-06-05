@@ -5,11 +5,13 @@ import type { ReactNode } from "react";
 
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
+import { RelatedActivity } from "@/features/activities/related-activity";
 import {
   ProjectPriorityBadge,
   ProjectStatusBadge,
 } from "@/features/projects/project-badges";
-import { getClients, getProject } from "@/services/api";
+import { RelatedNotes } from "@/features/notes/related-notes";
+import { getActivities, getClients, getNotes, getProject } from "@/services/api";
 
 export default async function ProjectDetailPage({
   params,
@@ -17,9 +19,11 @@ export default async function ProjectDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [project, clients] = await Promise.all([
+  const [project, clients, notes, activities] = await Promise.all([
     getProject(id).catch(() => null),
     getClients(),
+    getNotes({ projectId: id }),
+    getActivities({ entityType: "project", entityId: id }),
   ]);
 
   if (!project) {
@@ -78,6 +82,12 @@ export default async function ProjectDetailPage({
             {project.description || "No description captured for this project yet."}
           </p>
         </section>
+      </div>
+      <div className="mt-5">
+        <RelatedNotes createHref={`/notes/new?projectId=${project.id}`} notes={notes} />
+      </div>
+      <div className="mt-5">
+        <RelatedActivity activities={activities} />
       </div>
     </AppShell>
   );

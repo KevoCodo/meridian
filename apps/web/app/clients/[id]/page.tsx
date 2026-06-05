@@ -6,7 +6,9 @@ import type { ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/features/clients/status-badge";
-import { getClient } from "@/services/api";
+import { RelatedActivity } from "@/features/activities/related-activity";
+import { RelatedNotes } from "@/features/notes/related-notes";
+import { getActivities, getClient, getNotes } from "@/services/api";
 
 export default async function ClientDetailPage({
   params,
@@ -14,7 +16,11 @@ export default async function ClientDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const client = await getClient(id).catch(() => null);
+  const [client, notes, activities] = await Promise.all([
+    getClient(id).catch(() => null),
+    getNotes({ clientId: id }),
+    getActivities({ entityType: "client", entityId: id }),
+  ]);
 
   if (!client) {
     notFound();
@@ -79,6 +85,12 @@ export default async function ClientDetailPage({
             {client.notes || "No notes captured for this client yet."}
           </p>
         </section>
+      </div>
+      <div className="mt-5">
+        <RelatedNotes createHref={`/notes/new?clientId=${client.id}`} notes={notes} />
+      </div>
+      <div className="mt-5">
+        <RelatedActivity activities={activities} />
       </div>
     </AppShell>
   );

@@ -7,12 +7,15 @@ from app.models.project import Project
 from app.repositories.client_repository import ClientRepository
 from app.repositories.project_repository import ProjectRepository
 from app.repositories.workspace_repository import WorkspaceRepository
+from app.schemas.activity import ActivityAction, ActivityEntityType
 from app.schemas.project import ProjectCreate, ProjectStatus, ProjectUpdate
+from app.services.activity_service import ActivityService
 
 
 class ProjectService:
     def __init__(self, db: Session) -> None:
         self.db = db
+        self.activities = ActivityService(db)
         self.clients = ClientRepository(db)
         self.projects = ProjectRepository(db)
         self.workspaces = WorkspaceRepository(db)
@@ -38,6 +41,13 @@ class ProjectService:
     def create_project(self, payload: ProjectCreate) -> Project:
         self._validate_workspace_client(payload.workspace_id, payload.client_id)
         project = self.projects.create(payload.model_dump(mode="python", by_alias=False))
+        self.activities.record(
+            workspace_id=project.workspace_id,
+            entity_type=ActivityEntityType.PROJECT,
+            entity_id=project.id,
+            action=ActivityAction.CREATED,
+            message=f"Project created: {project.name}",
+        )
         self.db.commit()
         self.db.refresh(project)
         return project
