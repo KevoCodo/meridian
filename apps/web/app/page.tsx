@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 
 import { AppShell } from "@/components/app-shell";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ActivityTimeline } from "@/features/activities/activity-timeline";
@@ -76,20 +77,14 @@ export default async function DashboardPage() {
 
   return (
     <AppShell>
-      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-normal text-primary">
-            Operational overview
-          </p>
-          <h1 className="mt-2 text-3xl font-bold">Dashboard</h1>
-          <p className="mt-2 text-muted-foreground">
-            A current view of work, attention, and recent changes.
-          </p>
-        </div>
-        <Button asChild>
+      <PageHeader
+        actions={<Button asChild>
           <Link href="/tasks/new">Create task</Link>
-        </Button>
-      </div>
+        </Button>}
+        description="A current view of work, attention, and recent changes."
+        eyebrow="Operational overview"
+        title="Dashboard"
+      />
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {metrics.map((metric) => (

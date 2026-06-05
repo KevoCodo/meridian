@@ -1,5 +1,13 @@
 import type { HealthStatus } from "@/types/health";
 import type { Activity, ActivityFilters } from "@/types/activity";
+import type {
+  AutomationExecution,
+  AutomationExecutionFilters,
+} from "@/types/automation-execution";
+import type {
+  AutomationRule,
+  AutomationRulePayload,
+} from "@/types/automation-rule";
 import type { Client, ClientPayload } from "@/types/client";
 import type { DashboardOverview } from "@/types/dashboard";
 import type { Note, NoteFilters, NotePayload } from "@/types/note";
@@ -30,6 +38,51 @@ export async function getActivities(
 
   const query = params.toString();
   return backendFetch<Activity[]>(`/activities${query ? `?${query}` : ""}`);
+}
+
+export async function getAutomationRules(workspaceId?: string): Promise<AutomationRule[]> {
+  const query = workspaceId ? `?workspaceId=${workspaceId}` : "";
+  return backendFetch<AutomationRule[]>(`/automation-rules${query}`);
+}
+
+export async function getAutomationExecutions(
+  filters: AutomationExecutionFilters = {},
+): Promise<AutomationExecution[]> {
+  const params = new URLSearchParams();
+  if (filters.workspaceId) params.set("workspaceId", filters.workspaceId);
+  if (filters.automationRuleId) {
+    params.set("automationRuleId", filters.automationRuleId);
+  }
+  if (filters.triggerEntityId) {
+    params.set("triggerEntityId", filters.triggerEntityId);
+  }
+  const query = params.toString();
+  return backendFetch<AutomationExecution[]>(
+    `/automation-executions${query ? `?${query}` : ""}`,
+  );
+}
+
+export async function getAutomationRule(id: string): Promise<AutomationRule> {
+  return backendFetch<AutomationRule>(`/automation-rules/${id}`);
+}
+
+export async function createAutomationRule(
+  payload: AutomationRulePayload,
+): Promise<AutomationRule> {
+  return backendFetch<AutomationRule>("/automation-rules", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateAutomationRule(
+  id: string,
+  payload: Partial<AutomationRulePayload>,
+): Promise<AutomationRule> {
+  return backendFetch<AutomationRule>(`/automation-rules/${id}`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
 }
 
 export async function getWorkspaces(): Promise<Workspace[]> {

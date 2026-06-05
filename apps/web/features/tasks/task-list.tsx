@@ -1,5 +1,7 @@
+import { ListTodo } from "lucide-react";
 import Link from "next/link";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import { TaskPriorityBadge, TaskStatusBadge } from "@/features/tasks/task-badges";
 import type { Project } from "@/types/project";
 import type { Task } from "@/types/task";
@@ -15,14 +17,18 @@ export function TaskList({
 
   if (tasks.length === 0) {
     return (
-      <div className="rounded-md border border-border bg-white p-6 text-sm text-muted-foreground">
-        No tasks match the current view.
-      </div>
+      <EmptyState
+        actionHref="/tasks/new"
+        actionLabel="Create task"
+        description="Create a task or adjust the current filters to find actionable work."
+        icon={ListTodo}
+        title="No tasks match this view"
+      />
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-md border border-border bg-white shadow-sm">
+    <div className="overflow-x-auto rounded-md border border-border bg-white shadow-sm">
       <table className="w-full border-collapse text-left text-sm">
         <thead className="bg-muted text-muted-foreground">
           <tr>

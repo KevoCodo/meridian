@@ -1,8 +1,8 @@
 # Meridian
 
 Meridian is a workspace-aware business operations platform built as a monorepo.
-It currently supports clients, projects, tasks, notes, operational activity, and
-a dashboard overview.
+It currently supports clients, projects, tasks, notes, operational activity, a
+dashboard overview, and automation rule definitions.
 
 Repository structure:
 
@@ -27,6 +27,15 @@ Start the full local stack with one command:
 docker compose up --build
 ```
 
+Populate the app with a professional demo workspace:
+
+```powershell
+.\scripts\seed-demo.ps1
+```
+
+The seed command is safe to run repeatedly. It creates `Meridian Demo Workspace`
+and skips demo records that already exist.
+
 Services:
 
 - Frontend: http://localhost:3001
@@ -47,12 +56,14 @@ In another terminal, run:
 Manual checks:
 
 - Open http://localhost:3001 and confirm dashboard metrics, upcoming tasks, and recent activity load.
-- Open http://localhost:3001/workspaces and confirm the default workspace is visible.
+- Confirm the sidebar clearly marks the current page and remains usable at a narrow browser width.
+- Open http://localhost:3001/workspaces and confirm `Meridian Demo Workspace` is visible after seeding.
 - Open http://localhost:3001/clients and create a client, then edit it from the detail page.
 - Open http://localhost:3001/projects and create a project linked to a client, then filter by client or status.
 - Open http://localhost:3001/tasks and create a task linked to a project, then filter by project, status, or priority.
 - Open http://localhost:3001/notes and create a workspace or related note.
 - Open http://localhost:3001/activity and confirm key business events appear.
+- Open http://localhost:3001/automations and create or update an automation rule.
 - Open http://localhost:8001/health and confirm:
 
 ```json
@@ -87,6 +98,11 @@ Available API endpoints:
 - `PATCH /notes/{id}`
 - `GET /activities`
 - `GET /dashboard/overview`
+- `GET /automation-rules`
+- `GET /automation-rules/{id}`
+- `POST /automation-rules`
+- `PATCH /automation-rules/{id}`
+- `GET /automation-executions`
 
 Project filters:
 
@@ -125,6 +141,11 @@ Dashboard overview:
 The overview counts active clients, active projects, open and completed tasks,
 plus notes and activity created during the last 7 days.
 
+Active `task_completed` rules using `create_follow_up_task` execute
+synchronously when a task moves to completed. Meridian creates one follow-up
+task per matching rule and completed task, records the execution, and logs an
+activity event. Other trigger and action combinations remain definition-only.
+
 ## Environment Files
 
 Example environment files are committed for local reference:
@@ -159,3 +180,10 @@ Stop the stack with:
 ```bash
 docker compose down
 ```
+
+See `docs/LAUNCH_CHECKLIST.md` before recording screenshots or sharing a local
+demo.
+
+The frontend uses a consistent application shell with responsive navigation,
+active page states, shared page headers, actionable empty states, and
+route-level loading, error, and not-found screens.

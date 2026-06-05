@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { AppShell } from "@/components/app-shell";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { ProjectFilters } from "@/features/projects/project-filters";
 import { ProjectList } from "@/features/projects/project-list";
@@ -29,23 +30,17 @@ export default async function ProjectsPage({
 
   return (
     <AppShell>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-normal text-primary">
-            Client work
-          </p>
-          <h1 className="mt-2 text-3xl font-bold">Projects</h1>
-          <p className="mt-2 text-muted-foreground">
-            Track client-facing work by status, priority, ownership boundary, and due date.
-          </p>
-        </div>
-        <Button asChild>
+      <PageHeader
+        actions={<Button asChild>
           <Link href="/projects/new">
             <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
             New project
           </Link>
-        </Button>
-      </div>
+        </Button>}
+        description="Track client-facing work by status, priority, ownership boundary, and due date."
+        eyebrow="Client work"
+        title="Projects"
+      />
       <ProjectFilters
         clients={clients}
         selectedClientId={params.clientId}

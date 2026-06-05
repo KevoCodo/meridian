@@ -6,9 +6,16 @@ import type { ReactNode } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { RelatedActivity } from "@/features/activities/related-activity";
+import { AutomationResults } from "@/features/automations/automation-results";
 import { TaskPriorityBadge, TaskStatusBadge } from "@/features/tasks/task-badges";
 import { RelatedNotes } from "@/features/notes/related-notes";
-import { getActivities, getNotes, getProjects, getTask } from "@/services/api";
+import {
+  getActivities,
+  getAutomationExecutions,
+  getNotes,
+  getProjects,
+  getTask,
+} from "@/services/api";
 
 export default async function TaskDetailPage({
   params,
@@ -16,11 +23,12 @@ export default async function TaskDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const [task, projects, notes, activities] = await Promise.all([
+  const [task, projects, notes, activities, executions] = await Promise.all([
     getTask(id).catch(() => null),
     getProjects(),
     getNotes({ taskId: id }),
     getActivities({ entityType: "task", entityId: id }),
+    getAutomationExecutions({ triggerEntityId: id }),
   ]);
 
   if (!task) {
@@ -28,6 +36,11 @@ export default async function TaskDetailPage({
   }
 
   const project = projects.find((item) => item.id === task.projectId);
+  const followUpTasks = await Promise.all(
+    executions
+      .filter((execution) => execution.resultEntityId)
+      .map((execution) => getTask(execution.resultEntityId!)),
+  );
 
   return (
     <AppShell>
@@ -93,6 +106,9 @@ export default async function TaskDetailPage({
       </div>
       <div className="mt-5">
         <RelatedActivity activities={activities} />
+      </div>
+      <div className="mt-5">
+        <AutomationResults executions={executions} tasks={followUpTasks} />
       </div>
     </AppShell>
   );

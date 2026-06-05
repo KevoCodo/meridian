@@ -48,6 +48,24 @@ Activity is not a complete audit log. Phase 3A does not include actor
 attribution, permissions, notifications, real-time delivery, or background
 processing.
 
+## Automation Rule Definitions
+
+Automation rules are workspace-scoped configuration records managed through the
+standard route, service, repository, and model boundaries. Phase 4A stores the
+intended trigger, action, active state, and description only.
+
+Phase 4B introduces a narrow synchronous execution path:
+
+1. `TaskService` detects a transition to `completed`.
+2. `AutomationService` loads active matching rules for the task workspace.
+3. A unique `AutomationExecution` record prevents duplicate execution.
+4. A follow-up task and activity event are created.
+5. Task completion, execution, follow-up task, and activity commit together.
+
+Only `task_completed` with `create_follow_up_task` executes. Other rule
+combinations remain definition-only. Execution does not use background workers,
+scheduling, external integrations, or AI.
+
 ## Frontend
 
 The frontend is a Next.js application under `apps/web`.

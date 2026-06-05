@@ -1,4 +1,5 @@
 import {
+  Activity as ActivityIcon,
   BriefcaseBusiness,
   Building2,
   CheckCircle2,
@@ -7,6 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import type { Activity, ActivityEntityType } from "@/types/activity";
 
 const entityIcons: Record<ActivityEntityType, LucideIcon> = {
@@ -25,7 +27,13 @@ export function ActivityTimeline({
   emptyMessage?: string;
 }) {
   if (activities.length === 0) {
-    return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
+    return (
+      <EmptyState
+        description={emptyMessage}
+        icon={ActivityIcon}
+        title="No activity yet"
+      />
+    );
   }
 
   return (

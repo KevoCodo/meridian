@@ -1,6 +1,7 @@
 import { Building2, Users } from "lucide-react";
 
 import { AppShell } from "@/components/app-shell";
+import { PageHeader } from "@/components/page-header";
 import { getClients, getWorkspaces } from "@/services/api";
 
 export default async function WorkspacesPage() {
@@ -11,15 +12,11 @@ export default async function WorkspacesPage() {
 
   return (
     <AppShell>
-      <div className="mb-6">
-        <p className="text-sm font-semibold uppercase tracking-normal text-primary">
-          Workspace overview
-        </p>
-        <h1 className="mt-2 text-3xl font-bold">Workspace foundation</h1>
-        <p className="mt-2 max-w-2xl text-muted-foreground">
-          Workspaces are the top-level ownership boundary for Meridian business data.
-        </p>
-      </div>
+      <PageHeader
+        description="Workspaces are the top-level ownership boundary for Meridian business data."
+        eyebrow="Workspace overview"
+        title="Workspaces"
+      />
 
       <div className="grid gap-4 md:grid-cols-2">
         {workspaces.map((workspace) => (

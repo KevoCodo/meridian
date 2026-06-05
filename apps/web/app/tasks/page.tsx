@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 
 import { AppShell } from "@/components/app-shell";
+import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { TaskFilters } from "@/features/tasks/task-filters";
 import { TaskList } from "@/features/tasks/task-list";
@@ -34,23 +35,17 @@ export default async function TasksPage({
 
   return (
     <AppShell>
-      <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-normal text-primary">
-            Actionable work
-          </p>
-          <h1 className="mt-2 text-3xl font-bold">Tasks</h1>
-          <p className="mt-2 text-muted-foreground">
-            Track project work by status, priority, due date, and assignment.
-          </p>
-        </div>
-        <Button asChild>
+      <PageHeader
+        actions={<Button asChild>
           <Link href="/tasks/new">
             <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
             New task
           </Link>
-        </Button>
-      </div>
+        </Button>}
+        description="Track project work by status, priority, due date, and assignment."
+        eyebrow="Actionable work"
+        title="Tasks"
+      />
       <TaskFilters
         projects={projects}
         selectedPriority={selectedPriority}
