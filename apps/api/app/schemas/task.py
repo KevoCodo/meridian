@@ -5,6 +5,7 @@ from uuid import UUID
 from pydantic import BaseModel, ConfigDict, Field
 
 from app.schemas.base import to_camel
+from app.schemas.auth import UserRead
 
 
 class TaskStatus(StrEnum):
@@ -28,7 +29,7 @@ class TaskBase(BaseModel):
     status: TaskStatus = TaskStatus.TODO
     priority: TaskPriority = TaskPriority.MEDIUM
     due_date: date | None = None
-    assigned_to: str | None = Field(default=None, max_length=255)
+    assigned_user_id: UUID | None = None
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
@@ -46,7 +47,7 @@ class TaskUpdate(BaseModel):
     status: TaskStatus | None = None
     priority: TaskPriority | None = None
     due_date: date | None = None
-    assigned_to: str | None = Field(default=None, max_length=255)
+    assigned_user_id: UUID | None = None
 
     model_config = ConfigDict(alias_generator=to_camel, populate_by_name=True)
 
@@ -57,6 +58,7 @@ class TaskRead(TaskBase):
     project_id: UUID
     created_at: datetime
     updated_at: datetime
+    assigned_user: UserRead | None = None
 
     model_config = ConfigDict(
         alias_generator=to_camel,

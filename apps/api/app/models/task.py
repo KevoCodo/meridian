@@ -1,12 +1,16 @@
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from datetime import date
 
 from sqlalchemy import CheckConstraint, Date, ForeignKey, String, Text
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy.dialects.postgresql import UUID as PG_UUID
 
 from app.database.base import Base, IdMixin, TimestampMixin
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 
 class Task(IdMixin, TimestampMixin, Base):
@@ -39,4 +43,10 @@ class Task(IdMixin, TimestampMixin, Base):
     status: Mapped[str] = mapped_column(String(80), nullable=False, default="todo")
     priority: Mapped[str] = mapped_column(String(80), nullable=False, default="medium")
     due_date: Mapped[date | None] = mapped_column(Date, nullable=True)
-    assigned_to: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    assigned_user_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("users.id"),
+        index=True,
+        nullable=True,
+    )
+    assigned_user: Mapped["User | None"] = relationship()

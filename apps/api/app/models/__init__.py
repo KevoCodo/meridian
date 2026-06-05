@@ -7,6 +7,7 @@ from app.models.project import Project
 from app.models.task import Task
 from app.models.user import User
 from app.models.workspace import Workspace
+from app.models.workspace_membership import WorkspaceMembership
 
 __all__ = [
     "Activity",
@@ -18,4 +19,5 @@ __all__ = [
     "Task",
     "User",
     "Workspace",
+    "WorkspaceMembership",
 ]

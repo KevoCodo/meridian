@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from sqlalchemy import select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from app.models.task import Task
 from app.schemas.task import TaskPriority, TaskStatus
@@ -18,7 +18,7 @@ class TaskRepository:
         status: TaskStatus | None = None,
         priority: TaskPriority | None = None,
     ) -> list[Task]:
-        statement = select(Task)
+        statement = select(Task).options(joinedload(Task.assigned_user))
 
         if workspace_id is not None:
             statement = statement.where(Task.workspace_id == workspace_id)
@@ -33,7 +33,12 @@ class TaskRepository:
         return list(self.db.scalars(statement).all())
 
     def get(self, task_id: UUID) -> Task | None:
-        return self.db.get(Task, task_id)
+        statement = (
+            select(Task)
+            .options(joinedload(Task.assigned_user))
+            .where(Task.id == task_id)
+        )
+        return self.db.scalar(statement)
 
     def create(self, data: dict) -> Task:
         task = Task(**data)

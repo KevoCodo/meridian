@@ -7,6 +7,7 @@ from app.models.task import Task
 from app.repositories.project_repository import ProjectRepository
 from app.repositories.task_repository import TaskRepository
 from app.repositories.workspace_repository import WorkspaceRepository
+from app.repositories.workspace_membership_repository import WorkspaceMembershipRepository
 from app.schemas.activity import ActivityAction, ActivityEntityType
 from app.schemas.task import TaskCreate, TaskPriority, TaskStatus, TaskUpdate
 from app.services.activity_service import ActivityService
@@ -21,6 +22,7 @@ class TaskService:
         self.projects = ProjectRepository(db)
         self.tasks = TaskRepository(db)
         self.workspaces = WorkspaceRepository(db)
+        self.memberships = WorkspaceMembershipRepository(db)
 
     def list_tasks(
         self,
@@ -44,6 +46,7 @@ class TaskService:
 
     def create_task(self, payload: TaskCreate) -> Task:
         self._validate_workspace_project(payload.workspace_id, payload.project_id)
+        self._validate_assignment(payload.workspace_id, payload.assigned_user_id)
         task = self.tasks.create(payload.model_dump(mode="python", by_alias=False))
         self.activities.record(
             workspace_id=task.workspace_id,
@@ -66,6 +69,10 @@ class TaskService:
         workspace_id = update_data.get("workspace_id", task.workspace_id)
         project_id = update_data.get("project_id", task.project_id)
         self._validate_workspace_project(workspace_id, project_id)
+        self._validate_assignment(
+            workspace_id,
+            update_data.get("assigned_user_id", task.assigned_user_id),
+        )
         became_completed = (
             task.status != TaskStatus.COMPLETED.value
             and update_data.get("status") == TaskStatus.COMPLETED
@@ -93,3 +100,7 @@ class TaskService:
         project = self.projects.get(project_id)
         if project is None or project.workspace_id != workspace_id:
             raise ResourceNotFoundError("project", project_id)
+
+    def _validate_assignment(self, workspace_id: UUID, user_id: UUID | None) -> None:
+        if user_id is not None and self.memberships.get(user_id, workspace_id) is None:
+            raise ResourceNotFoundError("workspace member", user_id)

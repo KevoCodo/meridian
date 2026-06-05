@@ -253,7 +253,6 @@ def _task_payloads(workspace_id, projects: dict[str, Project]) -> list[TaskCreat
             status="in_progress",
             priority="high",
             due_date=today + timedelta(days=4),
-            assigned_to="Maya Chen",
         ),
         TaskCreate(
             workspace_id=workspace_id,
@@ -263,7 +262,6 @@ def _task_payloads(workspace_id, projects: dict[str, Project]) -> list[TaskCreat
             status="todo",
             priority="high",
             due_date=today + timedelta(days=2),
-            assigned_to="Jordan Brooks",
         ),
         TaskCreate(
             workspace_id=workspace_id,
@@ -273,7 +271,6 @@ def _task_payloads(workspace_id, projects: dict[str, Project]) -> list[TaskCreat
             status="blocked",
             priority="medium",
             due_date=today + timedelta(days=9),
-            assigned_to="Avery Patel",
         ),
         TaskCreate(
             workspace_id=workspace_id,
@@ -292,7 +289,6 @@ def _task_payloads(workspace_id, projects: dict[str, Project]) -> list[TaskCreat
             status="completed",
             priority="medium",
             due_date=today - timedelta(days=1),
-            assigned_to="Avery Patel",
         ),
     ]
 
