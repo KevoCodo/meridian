@@ -1,11 +1,16 @@
 # Meridian
 
-Meridian is a business operations platform foundation built as a monorepo with:
+Meridian is a workspace-aware business operations platform built as a monorepo.
+It currently supports clients, projects, tasks, notes, operational activity, and
+a dashboard overview.
+
+Repository structure:
 
 - `apps/web` for the Next.js frontend
 - `apps/api` for the FastAPI backend
 - `docs` for architecture and product engineering documentation
-- `docker` and `scripts` for local infrastructure support
+- `scripts` for local verification and developer utilities
+- `docker-compose.yml` for the local application stack
 
 ## Requirements
 
@@ -60,7 +65,7 @@ Manual checks:
 
 - Open http://localhost:8001/docs and confirm FastAPI documentation loads.
 
-Phase 1A API endpoints:
+Available API endpoints:
 
 - `GET /workspaces`
 - `GET /workspaces/{id}`
