@@ -16,10 +16,10 @@ Use this checklist before screenshots, portfolio walkthroughs, or local demos.
 - Current-page navigation state is visible on every core page.
 - Navigation remains usable at a narrow mobile-sized viewport.
 - Dashboard shows active clients, active projects, open tasks, recent notes, and recent activity.
-- Workspace list includes `Meridian Demo Workspace`.
+- Workspace list includes the signed-in user's active workspace.
 - Client list includes BrightPath Consulting, Northstar Fitness, and Greenline Home Services.
 - Project list includes Website Refresh, Lead Intake Workflow, Q1 Content Plan, and Operations Cleanup.
-- Task list shows mixed statuses, priorities, assignments, and upcoming due dates.
+- Task list shows mixed statuses, priorities, and upcoming due dates.
 - Notes list includes client, project, and task context.
 - Activity timeline contains recent demo events.
 - Automation rules include the active follow-up task rule.

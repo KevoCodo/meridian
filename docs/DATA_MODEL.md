@@ -3,7 +3,8 @@
 This document defines Meridian's domain entities. Phase 1A implements Workspace
 and Client, Phase 1B implements Project, Phase 2A implements Task, Phase 2B
 implements Notes, Phase 3A implements Activity, Phase 4A implements
-AutomationRule definitions, and Phase 6A implements User authentication.
+AutomationRule definitions, Phase 6A implements User authentication, and Phase
+6B implements workspace memberships and user assignment.
 
 ## Standard Fields
 
@@ -40,17 +41,18 @@ Implemented fields:
 
 Relationships:
 
-- Will have many users through future workspace memberships
+- Has many users through workspace memberships
 - Has many clients
 - Has many projects
 - Has many tasks
 - Has many notes
 - Has many activities
 - Has many automation rules
+- Has many workspace memberships
 
 ### User
 
-An authenticated person who may join one or more workspaces in a later phase.
+An authenticated person who may belong to one or more workspaces.
 
 Implemented fields:
 
@@ -63,10 +65,10 @@ Implemented fields:
 
 Relationships:
 
-- May belong to many workspaces through future workspace memberships
+- May belong to many workspaces through workspace memberships
 - May author notes in later phases
 - May act on activities in later phases
-- May own or be assigned future work items
+- May be assigned tasks
 
 Implemented endpoints:
 
@@ -161,7 +163,7 @@ Implemented fields:
 - `status`: `todo`, `in_progress`, `blocked`, `completed`, or `archived`
 - `priority`: `low`, `medium`, `high`, or `urgent`
 - `dueDate`
-- `assignedTo`
+- `assignedUserId`
 - `createdAt`
 - `updatedAt`
 
@@ -169,7 +171,7 @@ Relationships:
 
 - Belongs to a workspace
 - Belongs to a project
-- May be assigned to users in later phases
+- May be assigned to a workspace member
 - Produces task activity events in later phases
 
 Implemented endpoints:
@@ -186,7 +188,23 @@ Supported filters:
 - `status`
 - `priority`
 
-`assignedTo` is currently optional text. It can move to a user relationship after authentication and user management exist.
+`assignedUserId` is optional and must reference a member of the task workspace.
+
+### WorkspaceMembership
+
+Connects one user to one workspace.
+
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `userId`
+- `role`: `owner` or `member`
+- `createdAt`
+- `updatedAt`
+
+The workspace and user pair is unique. Meridian currently uses the user's first
+membership as the active workspace.
 
 ### Note
 

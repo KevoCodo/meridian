@@ -43,9 +43,20 @@ serving protected pages, while server-side API calls forward the current cookie
 to FastAPI. Health checks, API documentation, login, and registration remain
 public.
 
-Authentication proves who a user is. It does not yet decide which workspaces
-that user may access. Workspace memberships and authorization enforcement are a
-separate phase.
+Authentication proves who a user is. Workspace authorization then limits that
+user to business data owned by their active workspace.
+
+## Workspace Authorization
+
+Phase 6B introduces `WorkspaceMembership` as the link between users and
+workspaces. Registration creates a workspace and an owner membership in the
+same transaction. The API resolves the user's first membership as the active
+workspace and scopes list, detail, create, and update operations to that
+workspace.
+
+Tasks reference an assigned user through `assignedUserId`. Assignment is only
+valid when that user is a member of the task workspace. Workspace switching,
+invitations, and role-specific permissions are intentionally deferred.
 
 ## Activity Timeline
 

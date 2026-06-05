@@ -220,6 +220,22 @@ Phase 6A authenticates users but does not yet authorize access by workspace.
 OAuth, password reset, email verification, advanced RBAC, and workspace
 membership are deferred.
 
+## Phase 6B: Workspace Membership and User Assignment
+
+Status: complete
+
+Deliverables:
+
+- Workspace membership schema and migration
+- Owner membership creation during registration
+- Active-workspace API authorization
+- Workspace member list endpoint and overview
+- Relational task user assignment
+- Workspace member assignment selector
+
+Phase 6B uses the user's first membership as the active workspace. Invitations,
+workspace switching, and role-specific permissions remain deferred.
+
 ## Phase 0C: Tooling and Quality Baseline
 
 Potential deliverables:

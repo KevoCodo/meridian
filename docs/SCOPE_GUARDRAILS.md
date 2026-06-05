@@ -38,3 +38,9 @@ These may be added in later phases after the foundation is stable.
 Phase 6A includes local email and password authentication only. It explicitly
 excludes OAuth, password reset, email verification, advanced RBAC, invitations,
 workspace membership, and workspace-level authorization.
+
+## Workspace Membership Limits
+
+Phase 6B adds workspace membership and active-workspace authorization. It does
+not add invitations, workspace switching, membership administration, advanced
+RBAC, or different owner/member permissions.

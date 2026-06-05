@@ -3,6 +3,8 @@
 Meridian is a workspace-aware business operations platform built as a monorepo.
 It currently supports clients, projects, tasks, notes, operational activity, a
 dashboard overview, automation rule definitions, and authenticated user access.
+Each registered user receives an owner workspace, and business data is scoped to
+the signed-in user's active workspace.
 
 Repository structure:
 
@@ -63,7 +65,8 @@ Manual checks:
 - Log back in and confirm the current user appears in the application shell.
 - Open http://localhost:3001 and confirm dashboard metrics, upcoming tasks, and recent activity load.
 - Confirm the sidebar clearly marks the current page and remains usable at a narrow browser width.
-- Open http://localhost:3001/workspaces and confirm `Meridian Demo Workspace` is visible after seeding.
+- Open http://localhost:3001/workspaces and confirm the active workspace is visible.
+- Confirm the workspace page shows the current member and role.
 - Open http://localhost:3001/clients and create a client, then edit it from the detail page.
 - Open http://localhost:3001/projects and create a project linked to a client, then filter by client or status.
 - Open http://localhost:3001/tasks and create a task linked to a project, then filter by project, status, or priority.
@@ -90,6 +93,7 @@ Available API endpoints:
 - `GET /auth/me`
 - `GET /workspaces`
 - `GET /workspaces/{id}`
+- `GET /workspaces/current/members`
 - `GET /clients`
 - `GET /clients/{id}`
 - `POST /clients`
@@ -159,8 +163,12 @@ activity event. Other trigger and action combinations remain definition-only.
 Authentication uses a signed JWT stored in an HTTP-only, same-site cookie.
 Passwords are hashed with Argon2 and never stored as plain text. Health, API
 documentation, registration, and login remain public; business API endpoints
-require a valid authenticated session. Workspace membership and workspace-level
-authorization are intentionally deferred to the next phase.
+require a valid authenticated session.
+
+Workspace memberships connect users to workspaces with `owner` or `member`
+roles. Meridian currently treats the user's first membership as the active
+workspace and scopes business API access to it. Workspace switching, invitations,
+and role-based permission differences remain deferred.
 
 ## Environment Files
 
