@@ -32,6 +32,24 @@ app/
 
 Routes should stay thin. They validate transport concerns, call services, and return API schemas. Services own business rules and orchestration. Repositories own persistence logic and SQLAlchemy query details.
 
+## Activity Timeline
+
+Activity records are append-oriented operational events. `ActivityService` owns
+event creation and is called by domain services, never directly by route
+handlers. Each activity is flushed and committed in the same database
+transaction as the business change that caused it.
+
+The Phase 3A activity timeline is intentionally synchronous and read-only:
+
+- Domain services record human-readable event messages.
+- `ActivityRepository` owns filtering and newest-first ordering.
+- `GET /activities` supports workspace and entity filtering.
+- The frontend uses one timeline component for workspace-wide and related views.
+
+Activity is not a complete audit log. Phase 3A does not include actor
+attribution, permissions, notifications, real-time delivery, or background
+processing.
+
 ## Frontend
 
 The frontend is a Next.js application under `apps/web`.

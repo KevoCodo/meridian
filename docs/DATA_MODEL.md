@@ -1,6 +1,6 @@
 # Meridian Data Model
 
-This document defines Meridian's domain entities. Phase 1A implements the Workspace and Client foundation. Phase 1B implements the Project foundation. Other entities remain planned placeholders until later phases.
+This document defines Meridian's domain entities. Phase 1A implements Workspace and Client, Phase 1B implements Project, Phase 2A implements Task, Phase 2B implements Notes, and Phase 3A implements Activity.
 
 ## Standard Fields
 
@@ -132,32 +132,111 @@ Delete is intentionally excluded from Phase 1B.
 
 A work item inside a workspace, optionally connected to a project.
 
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `projectId`
+- `title`
+- `description`
+- `status`: `todo`, `in_progress`, `blocked`, `completed`, or `archived`
+- `priority`: `low`, `medium`, `high`, or `urgent`
+- `dueDate`
+- `assignedTo`
+- `createdAt`
+- `updatedAt`
+
 Relationships:
 
 - Belongs to a workspace
-- May belong to a project
+- Belongs to a project
 - May be assigned to users in later phases
 - Produces task activity events in later phases
+
+Implemented endpoints:
+
+- `GET /tasks`
+- `GET /tasks/{id}`
+- `POST /tasks`
+- `PATCH /tasks/{id}`
+
+Supported filters:
+
+- `workspaceId`
+- `projectId`
+- `status`
+- `priority`
+
+`assignedTo` is currently optional text. It can move to a user relationship after authentication and user management exist.
 
 ### Note
 
 Textual knowledge or context captured in a workspace.
 
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `clientId` optional
+- `projectId` optional
+- `taskId` optional
+- `title`
+- `content`
+- `createdAt`
+- `updatedAt`
+
 Relationships:
 
 - Belongs to a workspace
-- May be authored by a user
-- May later attach to clients, projects, tasks, or workflows
+- May attach to a client
+- May attach to a project
+- May attach to a task
+- May remain general workspace context
+
+Implemented endpoints:
+
+- `GET /notes`
+- `GET /notes/{id}`
+- `POST /notes`
+- `PATCH /notes/{id}`
+
+Supported filters:
+
+- `workspaceId`
+- `clientId`
+- `projectId`
+- `taskId`
 
 ### Activity
 
 Append-oriented operational event record.
 
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `entityType`: `client`, `project`, `task`, `note`, or `workspace`
+- `entityId`
+- `action`: `created`, `updated`, `completed`, `archived`, or `note_added`
+- `message`
+- `metadata`
+- `createdAt`
+
 Relationships:
 
 - Belongs to a workspace
-- May have an actor user
-- References a subject by `subjectType` and `subjectId`
+- References a business entity through `entityType` and `entityId`
+- May carry non-authoritative event context in `metadata`
+
+Implemented endpoint:
+
+- `GET /activities`
+
+Supported filters:
+
+- `workspaceId`
+- `entityType`
+- `entityId`
 
 ### AutomationRule
 
@@ -176,24 +255,22 @@ Intended event structure:
 {
   "id": "uuid",
   "workspaceId": "uuid",
-  "actorId": "uuid-or-null",
-  "eventType": "task_completed",
-  "subjectType": "task",
-  "subjectId": "uuid",
+  "entityType": "task",
+  "entityId": "uuid",
+  "action": "completed",
+  "message": "Task completed: Draft homepage copy",
   "metadata": {},
   "createdAt": "timestamp"
 }
 ```
 
-Planned event types include:
+Phase 3A automatically records:
 
-- `client_created`
-- `project_created`
-- `task_created`
-- `task_updated`
-- `task_completed`
-- `note_added`
-- `automation_triggered`
-- `workflow_executed`
+- Client creation
+- Project creation
+- Task creation
+- A task first moving to completed
+- Note creation
 
-Activity logging is not implemented in Phase 1B.
+For related notes, `entityType` and `entityId` point to the note's most specific
+attachment. The note ID remains available in `metadata.noteId`.

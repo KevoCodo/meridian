@@ -52,7 +52,7 @@ Phase 1A excludes projects, tasks, notes, activity logging, automations, authent
 
 ## Phase 1B: Project Foundation
 
-Status: current
+Status: complete
 
 Deliverables:
 
@@ -65,6 +65,72 @@ Deliverables:
 - Client-linked project display
 
 Phase 1B excludes tasks, automations, AI features, reporting dashboards, and deletion.
+
+## Phase 2A: Task Foundation
+
+Status: complete
+
+Deliverables:
+
+- Task schema and migration
+- Task list, detail, create, and update API endpoints
+- Task filtering by workspace, project, status, and priority
+- Task list page
+- Task detail page
+- Create and edit task forms with React Hook Form and Zod
+- Optional text-based task assignment
+
+Phase 2A excludes comments, activity logging, automations, AI features, kanban boards, and deletion.
+
+## Phase 2B: Notes Foundation
+
+Status: complete
+
+Deliverables:
+
+- Note schema and migration
+- Note list, detail, create, and update API endpoints
+- Note filtering by workspace, client, project, and task
+- Notes list, detail, create, and edit pages
+- Related notes on client, project, and task detail pages
+- General workspace notes
+
+Phase 2B excludes AI summarization, search, tagging, comments, activity logging, rich text, and markdown editing.
+
+## Phase 3A: Activity Timeline Foundation
+
+Status: complete
+
+Deliverables:
+
+- Activity schema and migration
+- Append-oriented ActivityService and repository
+- Automatic events for client, project, task, and note creation
+- Automatic event when a task first moves to completed
+- Activity list API with workspace and entity filters
+- Workspace activity page
+- Related activity on client, project, and task detail pages
+
+Phase 3A excludes notifications, real-time updates, audit permissions, user
+attribution, background workers, and complete audit logging.
+
+## Phase 3B: Dashboard Overview
+
+Status: current
+
+Deliverables:
+
+- Dashboard overview aggregate API
+- Optional workspace-scoped dashboard metrics
+- Active client and project counts
+- Open and completed task counts
+- Seven-day recent note and activity counts
+- Operational dashboard homepage
+- Upcoming dated tasks section
+- Recent activity feed
+
+Phase 3B excludes charts, calendar views, exports, trend analysis, advanced
+analytics, reporting dashboards, and AI features.
 
 ## Phase 0C: Tooling and Quality Baseline
 

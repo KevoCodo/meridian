@@ -41,10 +41,13 @@ In another terminal, run:
 
 Manual checks:
 
-- Open http://localhost:3001 and confirm the page shows `Meridian`, `Project Status: Foundation Phase`, backend health status, and database connection status.
+- Open http://localhost:3001 and confirm dashboard metrics, upcoming tasks, and recent activity load.
 - Open http://localhost:3001/workspaces and confirm the default workspace is visible.
 - Open http://localhost:3001/clients and create a client, then edit it from the detail page.
 - Open http://localhost:3001/projects and create a project linked to a client, then filter by client or status.
+- Open http://localhost:3001/tasks and create a task linked to a project, then filter by project, status, or priority.
+- Open http://localhost:3001/notes and create a workspace or related note.
+- Open http://localhost:3001/activity and confirm key business events appear.
 - Open http://localhost:8001/health and confirm:
 
 ```json
@@ -69,12 +72,53 @@ Phase 1A API endpoints:
 - `GET /projects/{id}`
 - `POST /projects`
 - `PATCH /projects/{id}`
+- `GET /tasks`
+- `GET /tasks/{id}`
+- `POST /tasks`
+- `PATCH /tasks/{id}`
+- `GET /notes`
+- `GET /notes/{id}`
+- `POST /notes`
+- `PATCH /notes/{id}`
+- `GET /activities`
+- `GET /dashboard/overview`
 
 Project filters:
 
 - `GET /projects?workspaceId=<uuid>`
 - `GET /projects?clientId=<uuid>`
 - `GET /projects?status=active`
+
+Task filters:
+
+- `GET /tasks?workspaceId=<uuid>`
+- `GET /tasks?projectId=<uuid>`
+- `GET /tasks?status=in_progress`
+- `GET /tasks?priority=urgent`
+
+Note filters:
+
+- `GET /notes?workspaceId=<uuid>`
+- `GET /notes?clientId=<uuid>`
+- `GET /notes?projectId=<uuid>`
+- `GET /notes?taskId=<uuid>`
+
+Activity filters:
+
+- `GET /activities?workspaceId=<uuid>`
+- `GET /activities?entityType=project`
+- `GET /activities?entityId=<uuid>`
+
+Activity is recorded automatically when clients, projects, tasks, and notes are
+created, and when a task first moves to `completed`.
+
+Dashboard overview:
+
+- `GET /dashboard/overview`
+- `GET /dashboard/overview?workspaceId=<uuid>`
+
+The overview counts active clients, active projects, open and completed tasks,
+plus notes and activity created during the last 7 days.
 
 ## Environment Files
 
