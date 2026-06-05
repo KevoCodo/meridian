@@ -18,8 +18,8 @@ class ClientService:
         self.clients = ClientRepository(db)
         self.workspaces = WorkspaceRepository(db)
 
-    def list_clients(self) -> list[Client]:
-        return self.clients.list()
+    def list_clients(self, workspace_id: UUID) -> list[Client]:
+        return self.clients.list(workspace_id)
 
     def get_client(self, client_id: UUID) -> Client:
         client = self.clients.get(client_id)

@@ -10,8 +10,12 @@ class ClientRepository:
     def __init__(self, db: Session) -> None:
         self.db = db
 
-    def list(self) -> list[Client]:
-        statement = select(Client).order_by(Client.created_at.desc())
+    def list(self, workspace_id: UUID) -> list[Client]:
+        statement = (
+            select(Client)
+            .where(Client.workspace_id == workspace_id)
+            .order_by(Client.created_at.desc())
+        )
         return list(self.db.scalars(statement).all())
 
     def get(self, client_id: UUID) -> Client | None:

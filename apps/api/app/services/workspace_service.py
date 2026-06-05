@@ -11,8 +11,8 @@ class WorkspaceService:
     def __init__(self, db: Session) -> None:
         self.repository = WorkspaceRepository(db)
 
-    def list_workspaces(self) -> list[Workspace]:
-        return self.repository.list()
+    def list_workspaces(self, workspace_id: UUID) -> list[Workspace]:
+        return [self.get_workspace(workspace_id)]
 
     def get_workspace(self, workspace_id: UUID) -> Workspace:
         workspace = self.repository.get(workspace_id)
