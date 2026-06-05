@@ -8,7 +8,6 @@ meridian/
     web/
     api/
   docs/
-  docker/
   scripts/
   .github/
 ```
