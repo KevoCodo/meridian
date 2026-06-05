@@ -16,6 +16,33 @@ function Assert-HttpOk {
     Write-Host "[ok] $Name -> $Url"
 }
 
+function Assert-ProtectedRedirect {
+    param(
+        [string] $Url
+    )
+
+    try {
+        $response = Invoke-WebRequest -Uri $Url -MaximumRedirection 0 -UseBasicParsing
+    }
+    catch {
+        $response = $_.Exception.Response
+        if ($null -eq $response) {
+            throw
+        }
+    }
+
+    if ([int] $response.StatusCode -ne 307) {
+        throw "Protected frontend returned HTTP $([int] $response.StatusCode), expected 307"
+    }
+
+    $location = $response.Headers["Location"]
+    if (-not $location.StartsWith("/login")) {
+        throw "Protected frontend did not redirect to login"
+    }
+
+    Write-Host "[ok] Protected frontend -> redirects to login"
+}
+
 function Invoke-WithRetry {
     param(
         [string] $Name,
@@ -55,6 +82,7 @@ if ($health.database -ne "connected") {
 Write-Host "[ok] API health -> status=$($health.status), database=$($health.database), version=$($health.version)"
 
 Assert-HttpOk -Name "FastAPI docs" -Url "http://localhost:8001/docs"
-Assert-HttpOk -Name "Frontend" -Url "http://localhost:3001"
+Assert-HttpOk -Name "Frontend login" -Url "http://localhost:3001/login"
+Assert-ProtectedRedirect -Url "http://localhost:3001"
 
 Write-Host "Meridian local setup verification passed."
