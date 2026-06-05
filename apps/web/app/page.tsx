@@ -1,66 +1,130 @@
-import { HealthCard } from "@/features/foundation/health-card";
-import { MeridianMark } from "@/components/brand/meridian-mark";
-import { Button } from "@/components/ui/button";
+import {
+  Activity,
+  BriefcaseBusiness,
+  Building2,
+  CheckCircle2,
+  FileText,
+  ListTodo,
+} from "lucide-react";
 import Link from "next/link";
 
-const stack = [
-  "Next.js",
-  "TypeScript",
-  "React",
-  "shadcn/ui-ready structure",
-  "FastAPI",
-  "Pydantic",
-  "SQLAlchemy",
-  "Alembic",
-  "PostgreSQL",
-  "Docker Compose",
-];
+import { AppShell } from "@/components/app-shell";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ActivityTimeline } from "@/features/activities/activity-timeline";
+import { MetricCard } from "@/features/dashboard/metric-card";
+import { UpcomingTasks } from "@/features/dashboard/upcoming-tasks";
+import {
+  getActivities,
+  getDashboardOverview,
+  getProjects,
+  getTasks,
+} from "@/services/api";
 
-export default function Home() {
+export default async function DashboardPage() {
+  const [overview, activities, projects, tasks] = await Promise.all([
+    getDashboardOverview(),
+    getActivities(),
+    getProjects(),
+    getTasks(),
+  ]);
+
+  const metrics = [
+    {
+      href: "/clients",
+      icon: Building2,
+      label: "Active Clients",
+      supportingText: "Currently engaged",
+      value: overview.activeClients,
+    },
+    {
+      href: "/projects",
+      icon: BriefcaseBusiness,
+      label: "Active Projects",
+      supportingText: "Work in motion",
+      value: overview.activeProjects,
+    },
+    {
+      href: "/tasks",
+      icon: ListTodo,
+      label: "Open Tasks",
+      supportingText: "Needs attention",
+      value: overview.openTasks,
+    },
+    {
+      href: "/tasks",
+      icon: CheckCircle2,
+      label: "Completed Tasks",
+      supportingText: "Finished work",
+      value: overview.completedTasks,
+    },
+    {
+      href: "/notes",
+      icon: FileText,
+      label: "Recent Notes",
+      supportingText: "Created in the last 7 days",
+      value: overview.recentNotesCount,
+    },
+    {
+      href: "/activity",
+      icon: Activity,
+      label: "Recent Activity",
+      supportingText: "Events in the last 7 days",
+      value: overview.recentActivityCount,
+    },
+  ];
+
   return (
-    <main className="min-h-screen">
-      <section className="border-b border-border bg-white">
-        <div className="mx-auto flex max-w-6xl flex-col gap-6 px-6 py-12">
-          <div>
-            <p className="text-sm font-semibold uppercase tracking-normal text-primary">
-              Project Status: Foundation Phase
-            </p>
-            <div className="mt-3 flex items-center gap-3">
-              <MeridianMark className="h-14 w-14 text-primary" />
-              <h1 className="text-4xl font-bold">Meridian</h1>
-            </div>
-            <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
-              Business Operations Platform
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            <Button asChild>
-              <Link href="/clients">View clients</Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link href="/projects">View projects</Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <Link href="/workspaces">Workspace overview</Link>
-            </Button>
-          </div>
+    <AppShell>
+      <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-normal text-primary">
+            Operational overview
+          </p>
+          <h1 className="mt-2 text-3xl font-bold">Dashboard</h1>
+          <p className="mt-2 text-muted-foreground">
+            A current view of work, attention, and recent changes.
+          </p>
         </div>
+        <Button asChild>
+          <Link href="/tasks/new">Create task</Link>
+        </Button>
+      </div>
+
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {metrics.map((metric) => (
+          <MetricCard key={metric.label} {...metric} />
+        ))}
       </section>
 
-      <section className="mx-auto grid max-w-6xl gap-6 px-6 py-8 lg:grid-cols-[1fr_1.25fr]">
-        <div className="rounded-md border border-border bg-white p-5 shadow-sm">
-          <h2 className="text-lg font-semibold">Technology Stack Summary</h2>
-          <ul className="mt-4 grid gap-2 text-sm text-muted-foreground sm:grid-cols-2">
-            {stack.map((item) => (
-              <li key={item} className="rounded-md bg-muted px-3 py-2">
-                {item}
-              </li>
-            ))}
-          </ul>
-        </div>
+      <section className="mt-6 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>Upcoming tasks</CardTitle>
+            <Link className="text-sm font-medium text-primary hover:underline" href="/tasks">
+              View all
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <UpcomingTasks projects={projects} tasks={tasks} />
+          </CardContent>
+        </Card>
 
-        <HealthCard />
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between gap-3">
+            <CardTitle>Recent activity</CardTitle>
+            <Link
+              className="text-sm font-medium text-primary hover:underline"
+              href="/activity"
+            >
+              View all
+            </Link>
+          </CardHeader>
+          <CardContent>
+            <ActivityTimeline activities={activities.slice(0, 6)} />
+          </CardContent>
+        </Card>
       </section>
-    </main>
+    </AppShell>
   );
 }

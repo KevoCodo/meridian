@@ -15,6 +15,9 @@ export function AppShell({ children }: { children: ReactNode }) {
           </Link>
           <nav className="flex items-center gap-2">
             <Button asChild variant="ghost">
+              <Link href="/">Dashboard</Link>
+            </Button>
+            <Button asChild variant="ghost">
               <Link href="/workspaces">Workspace</Link>
             </Button>
             <Button asChild variant="ghost">
@@ -22,6 +25,15 @@ export function AppShell({ children }: { children: ReactNode }) {
             </Button>
             <Button asChild variant="ghost">
               <Link href="/projects">Projects</Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="/tasks">Tasks</Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="/notes">Notes</Link>
+            </Button>
+            <Button asChild variant="ghost">
+              <Link href="/activity">Activity</Link>
             </Button>
           </nav>
         </div>
