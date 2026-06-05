@@ -30,6 +30,23 @@ app/
 
 Routes should stay thin. They validate transport concerns, call services, and return API schemas. Services own business rules and orchestration. Repositories own persistence logic and SQLAlchemy query details.
 
+## Authentication
+
+Phase 6A uses short-lived signed JWT claims stored in an HTTP-only, same-site
+cookie. Passwords are hashed with Argon2 through `pwdlib`; plain-text passwords
+are never persisted. FastAPI validates the cookie through a shared dependency
+before allowing access to business routers.
+
+The Next.js application proxies authentication requests so the browser cookie
+stays first-party to the frontend. Its route proxy validates the session before
+serving protected pages, while server-side API calls forward the current cookie
+to FastAPI. Health checks, API documentation, login, and registration remain
+public.
+
+Authentication proves who a user is. It does not yet decide which workspaces
+that user may access. Workspace memberships and authorization enforcement are a
+separate phase.
+
 ## Activity Timeline
 
 Activity records are append-oriented operational events. `ActivityService` owns

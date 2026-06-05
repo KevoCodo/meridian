@@ -1,6 +1,9 @@
 # Meridian Data Model
 
-This document defines Meridian's domain entities. Phase 1A implements Workspace and Client, Phase 1B implements Project, Phase 2A implements Task, Phase 2B implements Notes, Phase 3A implements Activity, and Phase 4A implements AutomationRule definitions.
+This document defines Meridian's domain entities. Phase 1A implements Workspace
+and Client, Phase 1B implements Project, Phase 2A implements Task, Phase 2B
+implements Notes, Phase 3A implements Activity, Phase 4A implements
+AutomationRule definitions, and Phase 6A implements User authentication.
 
 ## Standard Fields
 
@@ -37,7 +40,7 @@ Implemented fields:
 
 Relationships:
 
-- Has many users
+- Will have many users through future workspace memberships
 - Has many clients
 - Has many projects
 - Has many tasks
@@ -47,14 +50,30 @@ Relationships:
 
 ### User
 
-A person with access to a workspace.
+An authenticated person who may join one or more workspaces in a later phase.
+
+Implemented fields:
+
+- `id`
+- `email`
+- `name`
+- `passwordHash` stored only in the database and never returned by the API
+- `createdAt`
+- `updatedAt`
 
 Relationships:
 
-- Belongs to a workspace
-- May author notes
-- May act on activities
+- May belong to many workspaces through future workspace memberships
+- May author notes in later phases
+- May act on activities in later phases
 - May own or be assigned future work items
+
+Implemented endpoints:
+
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/logout`
+- `GET /auth/me`
 
 ### Client
 

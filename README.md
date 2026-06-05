@@ -2,7 +2,7 @@
 
 Meridian is a workspace-aware business operations platform built as a monorepo.
 It currently supports clients, projects, tasks, notes, operational activity, a
-dashboard overview, and automation rule definitions.
+dashboard overview, automation rule definitions, and authenticated user access.
 
 Repository structure:
 
@@ -53,8 +53,14 @@ In another terminal, run:
 .\scripts\verify-local.ps1
 ```
 
+The verification command confirms the public login page loads and the main
+application redirects signed-out users to login.
+
 Manual checks:
 
+- Open http://localhost:3001/register and create a local account.
+- Log out, then confirm the main app redirects to http://localhost:3001/login.
+- Log back in and confirm the current user appears in the application shell.
 - Open http://localhost:3001 and confirm dashboard metrics, upcoming tasks, and recent activity load.
 - Confirm the sidebar clearly marks the current page and remains usable at a narrow browser width.
 - Open http://localhost:3001/workspaces and confirm `Meridian Demo Workspace` is visible after seeding.
@@ -78,6 +84,10 @@ Manual checks:
 
 Available API endpoints:
 
+- `POST /auth/register`
+- `POST /auth/login`
+- `POST /auth/logout`
+- `GET /auth/me`
 - `GET /workspaces`
 - `GET /workspaces/{id}`
 - `GET /clients`
@@ -145,6 +155,12 @@ Active `task_completed` rules using `create_follow_up_task` execute
 synchronously when a task moves to completed. Meridian creates one follow-up
 task per matching rule and completed task, records the execution, and logs an
 activity event. Other trigger and action combinations remain definition-only.
+
+Authentication uses a signed JWT stored in an HTTP-only, same-site cookie.
+Passwords are hashed with Argon2 and never stored as plain text. Health, API
+documentation, registration, and login remain public; business API endpoints
+require a valid authenticated session. Workspace membership and workspace-level
+authorization are intentionally deferred to the next phase.
 
 ## Environment Files
 
