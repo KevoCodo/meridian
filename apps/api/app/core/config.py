@@ -8,6 +8,9 @@ class Settings(BaseSettings):
     PROJECT_NAME: str = "Meridian API"
     VERSION: str = "0.1.0"
     ENVIRONMENT: str = "development"
+    AUTH_SECRET_KEY: str = "change-me-in-production"
+    AUTH_COOKIE_NAME: str = "meridian_session"
+    AUTH_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7
 
     POSTGRES_SERVER: str = "localhost"
     POSTGRES_PORT: int = 5432
@@ -37,6 +40,10 @@ class Settings(BaseSettings):
             for origin in self.BACKEND_CORS_ORIGINS.split(",")
             if origin.strip()
         ]
+
+    @property
+    def auth_cookie_secure(self) -> bool:
+        return self.ENVIRONMENT == "production"
 
 
 @lru_cache

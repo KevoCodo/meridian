@@ -1,7 +1,9 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api.activities import router as activities_router
+from app.api.auth import router as auth_router
+from app.api.dependencies import get_current_user
 from app.api.automation_rules import router as automation_rules_router
 from app.api.automation_executions import router as automation_executions_router
 from app.api.clients import router as clients_router
@@ -32,15 +34,18 @@ def create_app() -> FastAPI:
     )
 
     app.include_router(health_router)
-    app.include_router(activities_router)
-    app.include_router(automation_rules_router)
-    app.include_router(automation_executions_router)
-    app.include_router(dashboard_router)
-    app.include_router(workspaces_router)
-    app.include_router(clients_router)
-    app.include_router(projects_router)
-    app.include_router(tasks_router)
-    app.include_router(notes_router)
+    app.include_router(auth_router)
+
+    protected_dependencies = [Depends(get_current_user)]
+    app.include_router(activities_router, dependencies=protected_dependencies)
+    app.include_router(automation_rules_router, dependencies=protected_dependencies)
+    app.include_router(automation_executions_router, dependencies=protected_dependencies)
+    app.include_router(dashboard_router, dependencies=protected_dependencies)
+    app.include_router(workspaces_router, dependencies=protected_dependencies)
+    app.include_router(clients_router, dependencies=protected_dependencies)
+    app.include_router(projects_router, dependencies=protected_dependencies)
+    app.include_router(tasks_router, dependencies=protected_dependencies)
+    app.include_router(notes_router, dependencies=protected_dependencies)
 
     @app.on_event("startup")
     def seed_default_workspace() -> None:
