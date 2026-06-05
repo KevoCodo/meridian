@@ -1,8 +1,8 @@
 # Meridian
 
 Meridian is a workspace-aware business operations platform built as a monorepo.
-It currently supports clients, projects, tasks, notes, operational activity, and
-a dashboard overview.
+It currently supports clients, projects, tasks, notes, operational activity, a
+dashboard overview, and automation rule definitions.
 
 Repository structure:
 
@@ -53,6 +53,7 @@ Manual checks:
 - Open http://localhost:3001/tasks and create a task linked to a project, then filter by project, status, or priority.
 - Open http://localhost:3001/notes and create a workspace or related note.
 - Open http://localhost:3001/activity and confirm key business events appear.
+- Open http://localhost:3001/automations and create or update an automation rule.
 - Open http://localhost:8001/health and confirm:
 
 ```json
@@ -87,6 +88,11 @@ Available API endpoints:
 - `PATCH /notes/{id}`
 - `GET /activities`
 - `GET /dashboard/overview`
+- `GET /automation-rules`
+- `GET /automation-rules/{id}`
+- `POST /automation-rules`
+- `PATCH /automation-rules/{id}`
+- `GET /automation-executions`
 
 Project filters:
 
@@ -124,6 +130,11 @@ Dashboard overview:
 
 The overview counts active clients, active projects, open and completed tasks,
 plus notes and activity created during the last 7 days.
+
+Active `task_completed` rules using `create_follow_up_task` execute
+synchronously when a task moves to completed. Meridian creates one follow-up
+task per matching rule and completed task, records the execution, and logs an
+activity event. Other trigger and action combinations remain definition-only.
 
 ## Environment Files
 

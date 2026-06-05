@@ -116,7 +116,7 @@ attribution, background workers, and complete audit logging.
 
 ## Phase 3B: Dashboard Overview
 
-Status: current
+Status: complete
 
 Deliverables:
 
@@ -131,6 +131,42 @@ Deliverables:
 
 Phase 3B excludes charts, calendar views, exports, trend analysis, advanced
 analytics, reporting dashboards, and AI features.
+
+## Phase 4A: Automation Rule Foundation
+
+Status: complete
+
+Deliverables:
+
+- Workspace-scoped automation rule schema and migration
+- Trigger and action type validation
+- Automation rule list, detail, create, and update API endpoints
+- Automation rule list page
+- Automation rule detail page
+- Create and edit automation rule forms
+- Active and inactive definition states
+
+Phase 4A manages rule definitions only. It excludes automation execution,
+background workers, AI features, external integrations, and deletion.
+
+## Phase 4B: Simple Automation Execution
+
+Status: current
+
+Deliverables:
+
+- Synchronous AutomationService
+- Active rule evaluation on task completion
+- Follow-up task creation in the completed task's project
+- Automation execution records
+- Duplicate execution prevention by rule and completed task
+- Automation activity events
+- Follow-up task display on task detail pages
+- Execution behavior explanation on automation rule detail pages
+
+Phase 4B executes only `task_completed` with `create_follow_up_task`. It excludes
+additional triggers, complex actions, scheduling, background workers, external
+integrations, and AI.
 
 ## Phase 0C: Tooling and Quality Baseline
 

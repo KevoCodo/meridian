@@ -1,6 +1,6 @@
 # Meridian Data Model
 
-This document defines Meridian's domain entities. Phase 1A implements Workspace and Client, Phase 1B implements Project, Phase 2A implements Task, Phase 2B implements Notes, and Phase 3A implements Activity.
+This document defines Meridian's domain entities. Phase 1A implements Workspace and Client, Phase 1B implements Project, Phase 2A implements Task, Phase 2B implements Notes, Phase 3A implements Activity, and Phase 4A implements AutomationRule definitions.
 
 ## Standard Fields
 
@@ -242,10 +242,62 @@ Supported filters:
 
 Declarative rule for future workflow automation.
 
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `name`
+- `description`
+- `triggerType`: `task_completed`, `project_created`, or `client_created`
+- `actionType`: `create_follow_up_task`, `add_activity_log`, or `create_note_stub`
+- `isActive`
+- `createdAt`
+- `updatedAt`
+
 Relationships:
 
 - Belongs to a workspace
 - May later react to activity events or domain state changes
+
+Implemented endpoints:
+
+- `GET /automation-rules`
+- `GET /automation-rules/{id}`
+- `POST /automation-rules`
+- `PATCH /automation-rules/{id}`
+
+Phase 4B executes only active `task_completed` rules whose action is
+`create_follow_up_task`. Other trigger and action combinations remain
+configuration records only.
+
+### AutomationExecution
+
+Idempotency and traceability record for one automation rule execution.
+
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `automationRuleId`
+- `triggerType`
+- `triggerEntityId`
+- `actionType`
+- `resultEntityId`
+- `createdAt`
+
+Relationships:
+
+- Belongs to a workspace
+- Belongs to an automation rule
+- References the completed task through `triggerEntityId`
+- References the created follow-up task through `resultEntityId`
+
+Implemented endpoint:
+
+- `GET /automation-executions`
+
+The unique rule and trigger-entity pair prevents the same rule from creating
+multiple follow-up tasks for one completed task.
 
 ## Activity Event Shape
 
