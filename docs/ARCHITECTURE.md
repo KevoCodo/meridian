@@ -9,7 +9,6 @@ meridian/
     api/
   docs/
   scripts/
-  .github/
 ```
 
 ## Backend
