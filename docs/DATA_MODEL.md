@@ -1,6 +1,6 @@
 # Meridian Data Model
 
-This document defines the initial domain entities for planning only. Phase 0A includes placeholder models but no migrations, CRUD endpoints, or business workflows.
+This document defines Meridian's domain entities. Phase 1A implements the Workspace and Client foundation. Phase 1B implements the Project foundation. Other entities remain planned placeholders until later phases.
 
 ## Standard Fields
 
@@ -27,6 +27,14 @@ Future lifecycle fields may include:
 
 Top-level tenant boundary for a company, team, or operating unit.
 
+Implemented fields:
+
+- `id`
+- `name`
+- `slug`
+- `createdAt`
+- `updatedAt`
+
 Relationships:
 
 - Has many users
@@ -52,22 +60,73 @@ Relationships:
 
 An organization or person that the workspace manages work for.
 
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `name`
+- `status`: `active`, `inactive`, or `archived`
+- `contactName`
+- `contactEmail`
+- `companyWebsite`
+- `notes`
+- `createdAt`
+- `updatedAt`
+
 Relationships:
 
 - Belongs to a workspace
 - May have many projects
 - May be referenced by notes and activity records in later phases
 
+Implemented endpoints:
+
+- `GET /clients`
+- `GET /clients/{id}`
+- `POST /clients`
+- `PATCH /clients/{id}`
+
+Delete is intentionally excluded from Phase 1A.
+
 ### Project
 
 A structured body of work, usually tied to a client.
 
+Implemented fields:
+
+- `id`
+- `workspaceId`
+- `clientId`
+- `name`
+- `description`
+- `status`: `planning`, `active`, `paused`, `completed`, or `archived`
+- `priority`: `low`, `medium`, or `high`
+- `startDate`
+- `dueDate`
+- `createdAt`
+- `updatedAt`
+
 Relationships:
 
 - Belongs to a workspace
-- May belong to a client
+- Belongs to a client
 - Has many tasks
 - May have notes and activity records in later phases
+
+Implemented endpoints:
+
+- `GET /projects`
+- `GET /projects/{id}`
+- `POST /projects`
+- `PATCH /projects/{id}`
+
+Supported filters:
+
+- `workspaceId`
+- `clientId`
+- `status`
+
+Delete is intentionally excluded from Phase 1B.
 
 ### Task
 
@@ -137,4 +196,4 @@ Planned event types include:
 - `automation_triggered`
 - `workflow_executed`
 
-Activity logging is not implemented in Phase 0A.
+Activity logging is not implemented in Phase 1B.

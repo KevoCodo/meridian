@@ -64,3 +64,22 @@ Future integrations should enter through explicit modules:
 - Activity/event records through the activity foundation
 
 External integrations should not leak directly into route handlers or frontend components.
+
+## Local Runtime
+
+Docker Compose is the primary local development path during foundation phases.
+
+Host endpoints:
+
+- Frontend: `http://localhost:3001`
+- API health: `http://localhost:8001/health`
+- API docs: `http://localhost:8001/docs`
+- PostgreSQL: `localhost:5433`
+
+Container network endpoints:
+
+- Web: `web:3000`
+- API: `api:8000`
+- PostgreSQL: `postgres:5432`
+
+The frontend calls the backend health endpoint through the configured API base URL. In Docker Compose, the web container uses `http://api:8000`; when running outside Docker, use `http://localhost:8001`.
