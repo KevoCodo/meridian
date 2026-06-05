@@ -1,4 +1,7 @@
 import { HealthCard } from "@/features/foundation/health-card";
+import { MeridianMark } from "@/components/brand/meridian-mark";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const stack = [
   "Next.js",
@@ -22,10 +25,24 @@ export default function Home() {
             <p className="text-sm font-semibold uppercase tracking-normal text-primary">
               Project Status: Foundation Phase
             </p>
-            <h1 className="mt-3 text-4xl font-bold">Meridian</h1>
+            <div className="mt-3 flex items-center gap-3">
+              <MeridianMark className="h-14 w-14 text-primary" />
+              <h1 className="text-4xl font-bold">Meridian</h1>
+            </div>
             <p className="mt-3 max-w-2xl text-lg text-muted-foreground">
               Business Operations Platform
             </p>
+          </div>
+          <div className="flex flex-wrap gap-3">
+            <Button asChild>
+              <Link href="/clients">View clients</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/projects">View projects</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link href="/workspaces">Workspace overview</Link>
+            </Button>
           </div>
         </div>
       </section>
