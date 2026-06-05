@@ -10,12 +10,14 @@ from app.repositories.workspace_repository import WorkspaceRepository
 from app.schemas.activity import ActivityAction, ActivityEntityType
 from app.schemas.task import TaskCreate, TaskPriority, TaskStatus, TaskUpdate
 from app.services.activity_service import ActivityService
+from app.services.automation_service import AutomationService
 
 
 class TaskService:
     def __init__(self, db: Session) -> None:
         self.db = db
         self.activities = ActivityService(db)
+        self.automations = AutomationService(db)
         self.projects = ProjectRepository(db)
         self.tasks = TaskRepository(db)
         self.workspaces = WorkspaceRepository(db)
@@ -78,6 +80,7 @@ class TaskService:
                 action=ActivityAction.COMPLETED,
                 message=f"Task completed: {task.title}",
             )
+            self.automations.handle_task_completed(task)
         self.db.commit()
         self.db.refresh(task)
         return task

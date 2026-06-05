@@ -35,6 +35,9 @@ export function AppShell({ children }: { children: ReactNode }) {
             <Button asChild variant="ghost">
               <Link href="/activity">Activity</Link>
             </Button>
+            <Button asChild variant="ghost">
+              <Link href="/automations">Automations</Link>
+            </Button>
           </nav>
         </div>
       </header>
