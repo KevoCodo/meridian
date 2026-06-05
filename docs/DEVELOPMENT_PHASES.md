@@ -151,7 +151,7 @@ background workers, AI features, external integrations, and deletion.
 
 ## Phase 4B: Simple Automation Execution
 
-Status: current
+Status: complete
 
 Deliverables:
 
@@ -167,6 +167,39 @@ Deliverables:
 Phase 4B executes only `task_completed` with `create_follow_up_task`. It excludes
 additional triggers, complex actions, scheduling, background workers, external
 integrations, and AI.
+
+## Phase 5A: Demo Workspace Seeding
+
+Status: complete
+
+Deliverables:
+
+- Explicit demo workspace seed command
+- Idempotent workspace and record creation
+- Public-safe demo clients, projects, tasks, notes, and automation rule
+- Relative task and project dates for a useful dashboard
+- Realistic activity generated through existing domain services
+- Demo launch checklist
+
+Phase 5A does not automatically seed on API startup, use private business data,
+or create excessive demo records.
+
+## Phase 5B: MVP Polish and Navigation Pass
+
+Status: complete
+
+Deliverables:
+
+- Responsive sidebar and mobile navigation
+- Active navigation states
+- Shared page header structure
+- Actionable empty states for core lists
+- Route-level loading, error, and not-found states
+- Consistent table overflow and application spacing
+- Updated demo review checklist
+
+Phase 5B improves existing product surfaces only. It excludes new product
+modules, authentication, billing, external integrations, and AI features.
 
 ## Phase 0C: Tooling and Quality Baseline
 
