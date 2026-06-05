@@ -16,10 +16,23 @@ class Note(IdMixin, TimestampMixin, Base):
         index=True,
         nullable=False,
     )
-    author_id: Mapped[UUID | None] = mapped_column(
+    client_id: Mapped[UUID | None] = mapped_column(
         PG_UUID(as_uuid=True),
-        ForeignKey("users.id"),
+        ForeignKey("clients.id"),
+        index=True,
+        nullable=True,
+    )
+    project_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("projects.id"),
+        index=True,
+        nullable=True,
+    )
+    task_id: Mapped[UUID | None] = mapped_column(
+        PG_UUID(as_uuid=True),
+        ForeignKey("tasks.id"),
+        index=True,
         nullable=True,
     )
     title: Mapped[str] = mapped_column(String(255), nullable=False)
-    body: Mapped[str] = mapped_column(Text, nullable=False)
+    content: Mapped[str] = mapped_column(Text, nullable=False)

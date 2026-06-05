@@ -8,9 +8,7 @@ meridian/
     web/
     api/
   docs/
-  docker/
   scripts/
-  .github/
 ```
 
 ## Backend
@@ -31,6 +29,24 @@ app/
 ```
 
 Routes should stay thin. They validate transport concerns, call services, and return API schemas. Services own business rules and orchestration. Repositories own persistence logic and SQLAlchemy query details.
+
+## Activity Timeline
+
+Activity records are append-oriented operational events. `ActivityService` owns
+event creation and is called by domain services, never directly by route
+handlers. Each activity is flushed and committed in the same database
+transaction as the business change that caused it.
+
+The Phase 3A activity timeline is intentionally synchronous and read-only:
+
+- Domain services record human-readable event messages.
+- `ActivityRepository` owns filtering and newest-first ordering.
+- `GET /activities` supports workspace and entity filtering.
+- The frontend uses one timeline component for workspace-wide and related views.
+
+Activity is not a complete audit log. Phase 3A does not include actor
+attribution, permissions, notifications, real-time delivery, or background
+processing.
 
 ## Frontend
 
@@ -64,3 +80,22 @@ Future integrations should enter through explicit modules:
 - Activity/event records through the activity foundation
 
 External integrations should not leak directly into route handlers or frontend components.
+
+## Local Runtime
+
+Docker Compose is the primary local development path during foundation phases.
+
+Host endpoints:
+
+- Frontend: `http://localhost:3001`
+- API health: `http://localhost:8001/health`
+- API docs: `http://localhost:8001/docs`
+- PostgreSQL: `localhost:5433`
+
+Container network endpoints:
+
+- Web: `web:3000`
+- API: `api:8000`
+- PostgreSQL: `postgres:5432`
+
+The frontend calls the backend health endpoint through the configured API base URL. In Docker Compose, the web container uses `http://api:8000`; when running outside Docker, use `http://localhost:8001`.
